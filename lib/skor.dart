@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'main.dart';
 
 class ResultsPage extends StatelessWidget {
-  final int currentScore;
+  final double currentScore;
 
   ResultsPage({
     required this.currentScore,
@@ -39,7 +39,7 @@ class ResultsPage extends StatelessWidget {
             ),
 
             Text(
-              '$currentScore / 3',
+              '$currentScore',
               style: TextStyle(
                 color: Colors.yellow,
                 fontSize: 32,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiz/isian.dart';
 import 'package:quiz/pilihanganda.dart';
 import 'benarsalah.dart';
 
@@ -119,7 +120,12 @@ class QuizHomePage extends StatelessWidget {
             SizedBox(
               width: double.infinity, // button jadi lebar
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Isian()),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white, // background button warna
                   padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
@@ -129,6 +135,31 @@ class QuizHomePage extends StatelessWidget {
                 ),
                 child: Text(
                   "Soal Isian",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Color(0xFF0D47A1), // warna teks button
+                  ),
+                ),
+              ),
+            ),
+
+            SizedBox(height: 20),
+            //tombol buat ke statistik sementara nanti hapus
+            SizedBox(
+              width: double.infinity, // button jadi lebar
+              child: ElevatedButton(
+                onPressed: () {
+                  //ke halaman opsi matkul yang mau dilihat statistiknya
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white, // background button warna
+                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                child: Text(
+                  "statistik",
                   style: TextStyle(
                     fontSize: 18,
                     color: Color(0xFF0D47A1), // warna teks button

@@ -11,6 +11,7 @@ class _Benarsalah extends State<Benarsalah> {
   int score = 0;
   int timeLeft = 20;
   Timer? timer;
+  double nilai = 0;
 
   // jawaban yang benar untuk setiap soal
   final Map<int, String> correctAnswers = {
@@ -57,8 +58,18 @@ class _Benarsalah extends State<Benarsalah> {
       });
     }
 
-    // lanjut ke pertanyaan berikutnya. kalau no pertanyaan masih kurang dari 3 akan nambah terus
+    // Update nilai based on the score
     setState(() {
+      if (score == 1) {
+        nilai = 33;
+      } else if (score == 2) {
+        nilai = 67;
+      } else if (score == 3) {
+        nilai = 100;
+      }
+
+      // lanjut ke pertanyaan berikutnya. kalau no pertanyaan masih kurang dari 3 akan nambah terus
+
       if (currentQuestion < 3) {
         currentQuestion++; // Go to the next question
       } else {
@@ -77,7 +88,7 @@ class _Benarsalah extends State<Benarsalah> {
       context,
       MaterialPageRoute(
         builder: (context) => ResultsPage(
-          currentScore: score, // Pass skor ke ResultsPage
+          currentScore: nilai, // Pass skor ke ResultsPage
         ),
       ),
     );
