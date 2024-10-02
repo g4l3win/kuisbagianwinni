@@ -80,7 +80,7 @@ class _PilihangandaState extends State<Pilihanganda> {
               ),
               SizedBox(height: 80),
 
-              // Lightbulb image
+              // Lightbulb imagess
               Image.asset(
                 'img/lightbulb.png',
                 height: 150,
