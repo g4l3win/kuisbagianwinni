@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'skor.dart';
 
-class Pilihanganda extends StatefulWidget {
+class Benarsalah extends StatefulWidget {
   @override
-  _PilihangandaState createState() => _PilihangandaState();
+  _Benarsalah createState() => _Benarsalah();
 }
 
-class _PilihangandaState extends State<Pilihanganda> {
+class _Benarsalah extends State<Benarsalah> {
   int score = 0;
   int timeLeft = 20;
   Timer? timer;
 
   // jawaban yang benar untuk setiap soal
   final Map<int, String> correctAnswers = {
-    1: 'pilihan 4', // jawaban benar pertanyaan 1
-    2: 'China', // bener untuk kedua
-    3: 'Mars', // bener untuk ketiga
+    1: 'benar', // jawaban benar pertanyaan 1
+    2: 'benar', // bener untuk kedua
+    3: 'salah', // bener untuk ketiga
   };
 
   // Keep track sedang pertanyaan keberapa
@@ -88,7 +88,7 @@ class _PilihangandaState extends State<Pilihanganda> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.all(20),
+          padding: EdgeInsets.all(30),
           color: Color(0xFF0D47A1), // warna background
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -111,7 +111,7 @@ class _PilihangandaState extends State<Pilihanganda> {
                   ),
                 ),
               ),
-              SizedBox(height: 40),
+              SizedBox(height: 50),
 
               // Lightbulb imagess
               Image.asset(
@@ -125,23 +125,23 @@ class _PilihangandaState extends State<Pilihanganda> {
               if (currentQuestion == 1) ...[
                 buildQuestion(
                   'Pertanyaan 1 dari 3',
-                  'Which one of these tanks was designed and operated by the United Kingdom?',
-                  ['pilihan 1', 'pilihan 2', 'Pilihan 3', 'pilihan 4'],
+                  'hai tolong pilih benar atau salah?',
+                  ['benar', 'salah'],
                 ),
               ] else if (currentQuestion == 2) ...[
                 buildQuestion(
                   'Pertanyaan 2 dari 3',
-                  'Which one of these countries has the largest population?',
-                  ['China', 'India', 'USA', 'Brazil'],
+                  'hai tolong pilih benar atau salah?',
+                  ['benar', 'salah'],
                 ),
               ] else if (currentQuestion == 3) ...[
                 buildQuestion(
                   'Pertanyaan 3 dari 3',
-                  'Which one of these planets is known as the Red Planet?',
-                  ['Earth', 'Jupiter', 'Mars', 'Venus'],
+                  'hai tolong pilih benar atau salah?',
+                  ['benar', 'salah'],
                 ),
               ],
-              SizedBox(height: 50),
+              SizedBox(height: 200),
             ],
           ),
         ),

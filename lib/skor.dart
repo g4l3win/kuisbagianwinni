@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'main.dart';
 
 class ResultsPage extends StatelessWidget {
   final int currentScore;
@@ -15,7 +16,7 @@ class ResultsPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 50), // Adjust spacing
+            SizedBox(height: 50),
 
             // Congratulation Text
             Text(
@@ -26,11 +27,11 @@ class ResultsPage extends StatelessWidget {
               ),
             ),
 
-            SizedBox(height: 10), // Spacing
+            SizedBox(height: 10),
 
             // Score
             Text(
-              'Your Score is',
+              'total skor kamu',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 24,
@@ -48,13 +49,16 @@ class ResultsPage extends StatelessWidget {
 
             SizedBox(height: 40), // Spacing
 
-            // Start Again Button
+            //  Button kembali ke memilih tipe soal
             ElevatedButton.icon(
               onPressed: () {
-                Navigator.pop(context); // Go back to start quiz again
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => QuizHomePage()),
+                );
               },
               icon: Icon(Icons.refresh),
-              label: Text('Start Again'),
+              label: Text('Latihan lagi'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white, // Button color
 

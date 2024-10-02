@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiz/pilihanganda.dart';
+import 'benarsalah.dart';
 
 void main() {
   runApp(QuizApp());
@@ -90,7 +91,12 @@ class QuizHomePage extends StatelessWidget {
             SizedBox(
               width: double.infinity, // Make the button take full width
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Benarsalah()),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white, // background button warna
                   padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
@@ -111,7 +117,7 @@ class QuizHomePage extends StatelessWidget {
 
             // Button soal isian
             SizedBox(
-              width: double.infinity, // Make the button take full width
+              width: double.infinity, // button jadi lebar
               child: ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
