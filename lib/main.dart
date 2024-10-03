@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:quiz/isian.dart';
 import 'package:quiz/pilihanganda.dart';
 import 'benarsalah.dart';
+import 'materistat.dart';
 
 void main() {
   runApp(QuizApp());
@@ -150,6 +151,10 @@ class QuizHomePage extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   //ke halaman opsi matkul yang mau dilihat statistiknya
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Materistat()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white, // background button warna
