@@ -18,6 +18,30 @@ class _TrueFalseQuizScreenState extends State<TrueFalseQuizScreen> {
   // State untuk menyimpan nilai dropdown (durasi timer)
   String selectedTimer = '15'; // Default value
 
+  // Controllers untuk text input
+  final TextEditingController question1Controller = TextEditingController();
+  final TextEditingController question2Controller = TextEditingController();
+  final TextEditingController question3Controller = TextEditingController();
+
+  // Fungsi untuk memeriksa apakah semua input valid
+  bool validateInput() {
+    // Memeriksa apakah semua field sudah diisi
+    if (question1Controller.text.isEmpty ||
+        question2Controller.text.isEmpty ||
+        question3Controller.text.isEmpty) {
+      return false;
+    }
+
+    // Memeriksa apakah checkbox benar/salah untuk setiap soal sudah dipilih
+    if ((!isChecked1 && !isChecked2) ||
+        (!isChecked3 && !isChecked4) ||
+        (!isChecked5 && !isChecked6)) {
+      return false;
+    }
+
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +52,6 @@ class _TrueFalseQuizScreenState extends State<TrueFalseQuizScreen> {
       // Mengatur agar layout dapat menyesuaikan saat keyboard muncul
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
-        // Membungkus Column dalam SingleChildScrollView
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,6 +59,7 @@ class _TrueFalseQuizScreenState extends State<TrueFalseQuizScreen> {
             // Input Soal Nomor 1
             Text("Soal 1"),
             TextField(
+              controller: question1Controller,
               decoration: InputDecoration(
                 hintText: 'Masukkan soal',
                 border: OutlineInputBorder(),
@@ -74,6 +98,7 @@ class _TrueFalseQuizScreenState extends State<TrueFalseQuizScreen> {
             // Input Soal Nomor 2
             Text("Soal 2"),
             TextField(
+              controller: question2Controller,
               decoration: InputDecoration(
                 hintText: 'Masukkan soal',
                 border: OutlineInputBorder(),
@@ -112,6 +137,7 @@ class _TrueFalseQuizScreenState extends State<TrueFalseQuizScreen> {
             // Input Soal Nomor 3
             Text("Soal 3"),
             TextField(
+              controller: question3Controller,
               decoration: InputDecoration(
                 hintText: 'Masukkan soal',
                 border: OutlineInputBorder(),
@@ -186,14 +212,25 @@ class _TrueFalseQuizScreenState extends State<TrueFalseQuizScreen> {
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  // Navigasi ke halaman truefalse_final_screen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          TruefalseFinalScreen(), // Pindah ke halaman final
-                    ),
-                  );
+                  if (validateInput()) {
+                    // Jika validasi berhasil, navigasi ke halaman final
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            TruefalseFinalScreen(), // Pindah ke halaman final
+                      ),
+                    );
+                  } else {
+                    // Tampilkan pesan kesalahan jika validasi gagal
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                            'Harap isi semua soal dan pilih jawaban untuk semua soal.'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
                 },
                 child: Text("Buat Kuis", style: TextStyle(color: Colors.white)),
                 style: ElevatedButton.styleFrom(

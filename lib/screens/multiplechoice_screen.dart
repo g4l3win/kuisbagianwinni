@@ -11,8 +11,26 @@ class _MultipleChoiceQuizScreenState extends State<MultipleChoiceQuizScreen> {
   List<int> selectedAnswers = List<int>.filled(3, -1); // Menyimpan jawaban soal
   List<List<String>> options = List.generate(
       3, (_) => List.filled(4, '')); // Menyimpan opsi yang diisi dosen
+
   // State untuk menyimpan nilai dropdown (durasi timer)
   String selectedTimer = '15'; // Default value
+
+  // Function to validate inputs before proceeding to the next page
+  bool validateInput() {
+    for (int i = 0; i < 3; i++) {
+      // Check if the question has one of the radio buttons selected
+      if (selectedAnswers[i] == -1) {
+        return false;
+      }
+      // Check if all text fields for options are filled
+      for (int j = 0; j < 4; j++) {
+        if (options[i][j].isEmpty) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,12 +133,25 @@ class _MultipleChoiceQuizScreenState extends State<MultipleChoiceQuizScreen> {
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    // Pindah ke halaman TrueFalseFinalScreen
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => TruefalseFinalScreen()),
-                    );
+                    // Validate input before navigating to the next page
+                    if (validateInput()) {
+                      // Pindah ke halaman TrueFalseFinalScreen jika validasi berhasil
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TruefalseFinalScreen(),
+                        ),
+                      );
+                    } else {
+                      // Tampilkan pesan kesalahan jika ada yang belum diisi
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                              'Harap isi semua opsi dan pilih jawaban untuk setiap soal.'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
                   },
                   child:
                       Text("Buat Kuis", style: TextStyle(color: Colors.white)),

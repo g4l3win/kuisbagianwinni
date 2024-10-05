@@ -20,6 +20,16 @@ class _EssayQuizScreenState extends State<EssayQuizScreen> {
   final TextEditingController question3Controller = TextEditingController();
   final TextEditingController answer3Controller = TextEditingController();
 
+  // Fungsi untuk memeriksa apakah semua field sudah diisi
+  bool areAllFieldsFilled() {
+    return question1Controller.text.isNotEmpty &&
+        answer1Controller.text.isNotEmpty &&
+        question2Controller.text.isNotEmpty &&
+        answer2Controller.text.isNotEmpty &&
+        question3Controller.text.isNotEmpty &&
+        answer3Controller.text.isNotEmpty;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,12 +140,23 @@ class _EssayQuizScreenState extends State<EssayQuizScreen> {
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    // Pindah ke halaman TrueFalseFinalScreen
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => TruefalseFinalScreen()),
-                    );
+                    // Periksa apakah semua field sudah diisi
+                    if (areAllFieldsFilled()) {
+                      // Pindah ke halaman TrueFalseFinalScreen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TruefalseFinalScreen()),
+                      );
+                    } else {
+                      // Tampilkan pesan kesalahan jika ada field yang kosong
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Harap isi semua soal dan jawaban."),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
                   },
                   child: Text(
                     "Buat Kuis",
