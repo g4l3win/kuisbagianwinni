@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
-import 'quizhomepage.dart';
+import 'home_screen.dart'; // Import your home_screen.dart
 
 class ResultsPage extends StatelessWidget {
   final double currentScore;
-  final String subject;
 
   ResultsPage({
     required this.currentScore,
-    required this.subject,
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue,
+      backgroundColor: Color(0xFF00B1C2),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -33,7 +31,7 @@ class ResultsPage extends StatelessWidget {
 
             // Score
             Text(
-              'total skor kamu',
+              'Total skor kamu',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 24,
@@ -49,22 +47,47 @@ class ResultsPage extends StatelessWidget {
               ),
             ),
 
-            SizedBox(height: 40), // Spacing
+            // SizedBox(height: 40), // Spacing
 
-            //  Button kembali ke memilih tipe soal
+            // // Button kembali ke memilih tipe soal
+            // ElevatedButton.icon(
+            //   onPressed: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => QuizHomePage()), // Tidak ada argumen
+            //     );
+            //   },
+            //   icon: Icon(Icons.refresh),
+            //   label: Text('Latihan lagi'),
+            //   style: ElevatedButton.styleFrom(
+            //     backgroundColor: Colors.white, // Button color
+            //     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+            //     textStyle: TextStyle(
+            //       fontSize: 18,
+            //       fontWeight: FontWeight.bold,
+            //     ),
+            //   ),
+            // ),
+
+            SizedBox(height: 20), // Spacing between buttons
+
+            // Button untuk kembali ke home
             ElevatedButton.icon(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => QuizHomePage(subject: subject)),
+                      builder: (context) =>
+                          HomePage()), // Navigate to HomeScreen
                 );
               },
-              icon: Icon(Icons.refresh),
-              label: Text('Latihan lagi'),
+              icon: Icon(Icons.home, color: Color(0xFFFFD801)),
+              label: Text('Home',
+                  style: TextStyle(
+                    color: Colors.white,
+                  )),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white, // Button color
-
+                backgroundColor: Color(0xFF3B547A), // Button color
                 padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                 textStyle: TextStyle(
                   fontSize: 18,

@@ -21,16 +21,35 @@ class _Statistik extends State<Statistik> {
 
   // Define the data for each quiz
   final Map<String, List<int>> quizData = {
-    'Kuis 1': [0, 3, 2, 5], // Data  Kuis 1: 0 => 0, 33 => 3, 67 => 2, 100 => 5
-    'Kuis 2': [0, 0, 5, 5], // Data  Kuis 2: 0 => 0, 33 => 0, 67 => 5, 100 => 5
-    'Kuis 3': [2, 1, 1, 6], // Data  Kuis 3: 0 => 2, 33 => 1, 67 => 1, 100 => 6
+    'Kuis 1': [
+      0,
+      3,
+      2,
+      5
+    ], // Data for Kuis 1: 0 => 0, 33 => 3, 67 => 2, 100 => 5
+    'Kuis 2': [
+      0,
+      0,
+      5,
+      5
+    ], // Data for Kuis 2: 0 => 0, 33 => 0, 67 => 5, 100 => 5
+    'Kuis 3': [
+      2,
+      1,
+      1,
+      6
+    ], // Data for Kuis 3: 0 => 2, 33 => 1, 67 => 1, 100 => 6
   };
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Statistik Nilai Kuis ${widget.subject}'),
+        backgroundColor: Color(0xFF00B1C2),
+        title: Text(
+          'Statistik Nilai Kuis ${widget.subject}',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -108,7 +127,7 @@ class _Statistik extends State<Statistik> {
         barRods: [
           BarChartRodData(
             toY: distribusi[index].toDouble(),
-            color: Colors.blue,
+            color: Color(0xFFFFD801),
             width: 20,
           ),
         ],
@@ -122,7 +141,7 @@ class _Statistik extends State<Statistik> {
       padding: const EdgeInsets.all(8),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.blue, // Background color for the item
+          color: Color(0xFF3B547A), // Background color for the item
           borderRadius: BorderRadius.circular(15.0), // Rounded corners
         ),
         padding: const EdgeInsets.all(16.0), // Add padding

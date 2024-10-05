@@ -5,16 +5,29 @@ class Materistat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue[600],
+      appBar: AppBar(
+        title: Text(
+          "Statistik Materi",
+          style: TextStyle(color: Colors.white),
+        ), // Judul halaman
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // Kembali ke halaman sebelumnya
+          },
+        ),
+        backgroundColor: Color(0xFF00B1C2), // Warna AppBar
+      ),
+      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 50),
+            SizedBox(height: 10),
             Text(
               'Pilih Materi untuk melihat statistik',
-              style: TextStyle(color: Colors.white, fontSize: 18),
+              style: TextStyle(color: Colors.black, fontSize: 18),
             ),
             SizedBox(height: 10),
 
@@ -25,20 +38,22 @@ class Materistat extends StatelessWidget {
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
                 children: [
-                  _buildMenuItem('Mat', Icons.numbers, onTap: () {
+                  _buildMenuItem('Database Systems', Icons.data_object,
+                      onTap: () {
                     // Aksi saat 'mat' ditekan
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Statistik(subject: 'Mat'),
+                        builder: (context) =>
+                            Statistik(subject: 'Database Systems'),
                       ),
                     );
                   }),
-                  _buildMenuItem('IPA', Icons.science, onTap: () {
+                  _buildMenuItem('Algorithm', Icons.menu, onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Statistik(subject: 'IPA'),
+                        builder: (context) => Statistik(subject: 'Algorithm'),
                       ),
                     );
                   }),
@@ -63,7 +78,7 @@ class Materistat extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(icon, color: Colors.black, size: 30), // Tambahkan Icon
+              Icon(icon, color: Color(0xFFFFD801), size: 30), // Tambahkan Icon
               Text(
                 title,
                 style: TextStyle(color: Colors.black, fontSize: 25),
