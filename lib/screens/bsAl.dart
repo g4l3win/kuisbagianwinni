@@ -15,7 +15,7 @@ class _Benarsalah extends State<AlBenarsalah> {
 
   // jawaban yang benar untuk setiap soal
   final Map<int, String> correctAnswers = {
-    1: 'salah', // jawaban benar pertanyaan 1
+    1: 'salah', // jawaban benar pertanyaan 1 ,,
     2: 'salah', // bener untuk kedua
     3: 'benar', // bener untuk ketiga
   };
