@@ -5,9 +5,6 @@ import 'materistat.dart';
 import 'quizhomepage.dart';
 import 'account.dart';
 import 'leaderboard.dart';
-import 'AlQuiz.dart';
-import 'WPQuiz.dart';
-import 'DSQuiz.dart';
 
 class HomePage extends StatefulWidget {
   @override
