@@ -208,3 +208,77 @@ class BenarSalahQuestions {
     return [];
   }
 }
+
+class IsianQuestions {
+  static List<Map<String, dynamic>> getIsianQuestions(String subject) {
+    if (subject == 'Flutter') {
+      return [
+        {
+          'question': 'Apa bahasa pemrograman yang digunakan untuk Flutter?',
+          'correctAnswer': 'dart',
+        },
+        {
+          'question': 'Apa widget yang digunakan untuk menampilkan teks?',
+          'correctAnswer': 'text',
+        },
+        {
+          'question': 'Apa nama alat untuk mengembangkan aplikasi Flutter?',
+          'correctAnswer': 'flutter sdk',
+        }
+      ];
+    } else if (subject == 'C++') {
+      return [
+        {
+          'question':
+              'Apa nama struktur data yang mengikuti prinsip LIFO (Last In First Out)?',
+          'correctAnswer': 'stack',
+        },
+        {
+          'question':
+              'Dalam C++, jenis data apa yang digunakan untuk menyimpan nilai benar atau salah?',
+          'correctAnswer': 'boolean',
+        },
+        {
+          'question':
+              'Apa istilah untuk pengulangan yang dilakukan selama kondisi tertentu terpenuhi dalam C++?',
+          'correctAnswer': 'loop',
+        }
+      ];
+    } else if (subject == 'HTML') {
+      return [
+        {
+          'question': 'Apa singkatan dari HyperText Markup Language?',
+          'correctAnswer': 'HTML',
+        },
+        {
+          'question': 'Fungsi untuk menampilkan output di PHP adalah ___()?',
+          'correctAnswer': 'echo',
+        },
+        {
+          'question':
+              'Untuk mengakhiri sebuah baris perintah di PHP, kita menggunakan simbol ___?',
+          'correctAnswer': ';',
+        }
+      ];
+    } else if (subject == 'SQL') {
+      return [
+        {
+          'question':
+              'Perintah SQL untuk menampilkan semua data dari tabel disebut?',
+          'correctAnswer': 'select',
+        },
+        {
+          'question':
+              'Untuk menghapus data dari tabel, kita menggunakan perintah?',
+          'correctAnswer': 'delete',
+        },
+        {
+          'question':
+              'Struktur data yang terdiri dari kolom dan baris di SQL disebut?',
+          'correctAnswer': 'tabel',
+        }
+      ];
+    }
+    return [];
+  }
+}

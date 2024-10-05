@@ -116,10 +116,13 @@ class QuizHomePage extends StatelessWidget {
                 width: double.infinity, // button jadi lebar
                 child: ElevatedButton(
                   onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => Isian()),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Isian(
+                                subject: subject,
+                              )),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor:
