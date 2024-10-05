@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
+import 'quizhomepage.dart';
 
 class ResultsPage extends StatelessWidget {
   final double currentScore;
+  final String subject;
 
   ResultsPage({
     required this.currentScore,
+    required this.subject,
   });
 
   @override
@@ -54,7 +56,8 @@ class ResultsPage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => QuizHomePage()),
+                  MaterialPageRoute(
+                      builder: (context) => QuizHomePage(subject: subject)),
                 );
               },
               icon: Icon(Icons.refresh),

@@ -3,6 +3,9 @@ import 'dart:async';
 import 'skor.dart';
 
 class Benarsalah extends StatefulWidget {
+  final String subject; // terima matkul
+  Benarsalah({required this.subject}); // Missing semicolon added
+
   @override
   _Benarsalah createState() => _Benarsalah();
 }
@@ -13,20 +16,78 @@ class _Benarsalah extends State<Benarsalah> {
   Timer? timer;
   double nilai = 0;
 
-  // jawaban yang benar untuk setiap soal
-  final Map<int, String> correctAnswers = {
-    1: 'benar', // jawaban benar pertanyaan 1
-    2: 'benar', // bener untuk kedua
-    3: 'salah', // bener untuk ketiga
-  };
-
   // Keep track sedang pertanyaan keberapa
-  int currentQuestion = 1;
+  int currentQuestion = 0;
+
+  // set pertanyaan dan jawaban untuk materi database atau algoritma
+  List<Map<String, dynamic>> questionSet = [];
 
   @override
   void initState() {
     super.initState();
-    startTimer(); // Start timer waktu kuis mulai
+    if (widget.subject == 'Database') {
+      questionSet = [
+        {
+          'question':
+              'Atribut adalah properti yang menggambarkan beberapa aspek dari objek yang ingin kita rekam, dan hubungan adalah asosiasi antar entitas',
+          'options': [
+            'Benar',
+            'Salah',
+          ],
+          'correctAnswer': 'Benar',
+        },
+        {
+          'question':
+              'DBMS adalah perangkat unak yang berinteraksi dengan program aplikasi pengguna dan database.',
+          'options': [
+            'Benar',
+            'Salah',
+          ],
+          'correctAnswer': 'Benar',
+        },
+        {
+          'question':
+              'dalam DBMS diperlukan Bahasa untuk mendefinisikan database (menentukan tipe, struktur data dan constraint data dalam database yang disebut Data manipulation language (DML)',
+          'options': [
+            'Benar',
+            'Salah',
+          ],
+          'correctAnswer': 'Salah',
+        }
+      ];
+    } else if (widget.subject == 'Algoritma') {
+      questionSet = [
+        {
+          'question':
+              'dalam flowchart, symbol berbentuk belah ketupat biasanya digunakan untuk merepresentasikan keputusan tau percabangan.',
+          'options': [
+            'Benar',
+            'Salah',
+          ],
+          'correctAnswer': 'Benar',
+        },
+        {
+          'question':
+              'tipe data int adalah tipe data yang tepat untuk menyimpan nilai jumlah penduduk pada sebuah kota',
+          'options': [
+            'Benar',
+            'Salah',
+          ],
+          'correctAnswer': 'Benar',
+        },
+        {
+          'question':
+              'jika nilai i = 5 if (i > 3 && i < 10) {printf("Benar\n");} maka akan tidak akan muncul output.',
+          'options': [
+            'Benar',
+            'Salah',
+          ],
+          'correctAnswer': 'Salah',
+        }
+      ];
+    }
+
+    startTimer(); // Start timer
   }
 
   @override
@@ -49,12 +110,12 @@ class _Benarsalah extends State<Benarsalah> {
     });
   }
 
-  // fungsi handle jawaban usert
+  // Handle jawaban
   void handleAnswer(String selectedAnswer) {
-    // Check if the selected answer is correct
-    if (correctAnswers[currentQuestion] == selectedAnswer) {
+    // Check cek jawaban benar atau salah
+    if (questionSet[currentQuestion]['correctAnswer'] == selectedAnswer) {
       setState(() {
-        score++; // kalau jawaban bener, skornya nambah 1
+        score++; // Increment score kalau jawaban benar
       });
     }
 
@@ -68,27 +129,24 @@ class _Benarsalah extends State<Benarsalah> {
         nilai = 100;
       }
 
-      // lanjut ke pertanyaan berikutnya. kalau no pertanyaan masih kurang dari 3 akan nambah terus
-
-      if (currentQuestion < 3) {
+      // Pindah ke pertanyaan berikutnya
+      if (currentQuestion < questionSet.length - 1) {
         currentQuestion++; // Go to the next question
       } else {
-        // kalau sudah sampai pertanyaan ke3 navigasi ke ResultsPage
-        _showResultPage();
-        // Cancel timer dan buat sisa waktu jadi 0
-        timer?.cancel();
-        timeLeft = 0;
+        _showResultPage(); // Navigasi ke halaman skor hasil
+        timer?.cancel(); // Stop timer
       }
     });
   }
 
-  // Navigasi ke ResultsPage
+  // Show result page
   void _showResultPage() {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => ResultsPage(
-          currentScore: nilai, // Pass skor ke ResultsPage
+          currentScore: nilai.toDouble(), // Pass nilai to ResultsPage
+          subject: widget.subject, // Pass subject to ResultsPage
         ),
       ),
     );
@@ -97,6 +155,7 @@ class _Benarsalah extends State<Benarsalah> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFF0D47A1),
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(30),
@@ -124,7 +183,7 @@ class _Benarsalah extends State<Benarsalah> {
               ),
               SizedBox(height: 50),
 
-              // Lightbulb imagess
+              // Lightbulb image
               Image.asset(
                 'img/lightbulb.png',
                 height: 150,
@@ -132,26 +191,11 @@ class _Benarsalah extends State<Benarsalah> {
 
               SizedBox(height: 20),
 
-              // menampilkan pertanyaan saat ini
-              if (currentQuestion == 1) ...[
-                buildQuestion(
-                  'Pertanyaan 1 dari 3',
-                  'hai tolong pilih benar atau salah?',
-                  ['benar', 'salah'],
-                ),
-              ] else if (currentQuestion == 2) ...[
-                buildQuestion(
-                  'Pertanyaan 2 dari 3',
-                  'hai tolong pilih benar atau salah?',
-                  ['benar', 'salah'],
-                ),
-              ] else if (currentQuestion == 3) ...[
-                buildQuestion(
-                  'Pertanyaan 3 dari 3',
-                  'hai tolong pilih benar atau salah?',
-                  ['benar', 'salah'],
-                ),
-              ],
+              // Display pertanyaan
+              buildQuestion(
+                questionSet[currentQuestion]['question'],
+                questionSet[currentQuestion]['options'],
+              ),
               SizedBox(height: 200),
             ],
           ),
@@ -160,48 +204,35 @@ class _Benarsalah extends State<Benarsalah> {
     );
   }
 
-  // fungsi membangun pertanyaan dan button pilihan ganda
-  Widget buildQuestion(
-      String questionTitle, String questionText, List<String> answers) {
+  // Fungsi membuat pertanyaan dan button jawaban
+  Widget buildQuestion(String questionText, List<String> options) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                questionTitle,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
-              ),
-              SizedBox(height: 10),
-              Text(
-                questionText,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
+          child: Text(
+            questionText,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         SizedBox(height: 20),
-        // menampilkan button pilihan jawaban
-        for (var answer in answers)
+
+        // Display answer buttons
+        for (var option in options)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: buildAnswerButton(answer),
+            child: buildAnswerButton(option),
           ),
       ],
     );
   }
 
-  // fungsi membuat button jawaban
+  // Function untuk answer buttons
   Widget buildAnswerButton(String answer) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -216,7 +247,7 @@ class _Benarsalah extends State<Benarsalah> {
             ),
           ),
           onPressed: () {
-            handleAnswer(answer); // memeriksa jawaban
+            handleAnswer(answer); // cek jawaban saat button ditekan
           },
           child: Text(
             answer,

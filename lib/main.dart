@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quiz/isian.dart';
-import 'package:quiz/pilihanganda.dart';
-import 'benarsalah.dart';
-import 'materistat.dart';
+import 'quizhomepage.dart';
 
 void main() {
   runApp(QuizApp());
@@ -13,166 +10,83 @@ class QuizApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: QuizHomePage(),
+      home: Materiquiz(),
     );
   }
 }
 
-class QuizHomePage extends StatelessWidget {
+class Materiquiz extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        padding: EdgeInsets.all(20),
-        color: Color(0xFF0D47A1), // Background color
+      backgroundColor: Colors.blue[600],
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 50),
-
-            // gambar start
-            Image.asset(
-              'img/starting.png',
-              height: 150,
-            ),
-            SizedBox(height: 30),
-
-            // text besar
             Text(
-              "Sudah siap?",
-              style: TextStyle(
-                fontSize: 24,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
+              'Pilih Materi kuis',
+              style: TextStyle(color: Colors.white, fontSize: 18),
             ),
             SizedBox(height: 10),
 
-            // Subtitle Text
-            Text(
-              "Pilih soal pilihan ganda atau soal benar salah atau soal esai!",
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 50),
-
-            // Button pilgan
-            SizedBox(
-              width: double.infinity, // Make the button take full width
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Pilihanganda()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white, // Button background color
-                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: Text(
-                  "Soal Pilihan Ganda",
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Color(0xFF0D47A1), // warna teks Button
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-
-            // Button benar salah
-            SizedBox(
-              width: double.infinity, // Make the button take full width
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Benarsalah()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white, // background button warna
-                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: Text(
-                  "Soal Benar Salah",
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Color(0xFF0D47A1), // warna teks button
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-
-            // Button soal isian
-            SizedBox(
-              width: double.infinity, // button jadi lebar
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Isian()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white, // background button warna
-                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: Text(
-                  "Soal Isian",
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Color(0xFF0D47A1), // warna teks button
-                  ),
-                ),
-              ),
-            ),
-
-            SizedBox(height: 20),
-            //tombol buat ke statistik sementara nanti hapus
-            SizedBox(
-              width: double.infinity, // button jadi lebar
-              child: ElevatedButton(
-                onPressed: () {
-                  //ke halaman opsi matkul yang mau dilihat statistiknya
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Materistat()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white, // background button warna
-                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: Text(
-                  "statistik",
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Color(0xFF0D47A1), // warna teks button
-                  ),
-                ),
+            // Grid View for Menu
+            Expanded(
+              child: GridView.count(
+                crossAxisCount: 2, // 2 items per row
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                children: [
+                  _buildMenuItem('Database', 'img/database.png', onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => QuizHomePage(subject: 'Database'),
+                      ),
+                    );
+                  }),
+                  _buildMenuItem('Algoritma', 'img/algorithm.png', onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            QuizHomePage(subject: 'Algoritma'),
+                      ),
+                    );
+                  }),
+                ],
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  // Fungsi untuk membangun tampilan setiap item di Grid
+  Widget _buildMenuItem(String title, String imagePath, {VoidCallback? onTap}) {
+    return Card(
+      color: Colors.white,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                imagePath,
+                height: 80, // Adjust the size of the image
+              ),
+              Text(
+                title,
+                style: TextStyle(color: Colors.black, fontSize: 18),
+              ),
+              SizedBox(height: 10),
+            ],
+          ),
         ),
       ),
     );

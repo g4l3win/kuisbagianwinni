@@ -3,6 +3,9 @@ import 'dart:async';
 import 'skor.dart';
 
 class Isian extends StatefulWidget {
+  final String subject; // Accept subject as a parameter
+  Isian({required this.subject});
+
   @override
   _IsianState createState() => _IsianState();
 }
@@ -13,33 +16,67 @@ class _IsianState extends State<Isian> {
   Timer? timer;
   double nilai = 0;
 
-  // jawaban yang benar untuk setiap soal
-  final Map<int, String> correctAnswers = {
-    1: 'benar', // jawaban benar pertanyaan 1
-    2: 'benar', // jawaban benar untuk kedua
-    3: 'salah', // jawaban benar untuk ketiga
-  };
+  // Set pertanyaan dan jawaban untuk materi database atau algoritma
+  List<Map<String, dynamic>> questionSet = [];
+  int currentQuestion = 0; // Track current question index
 
-  // Keep track sedang pertanyaan keberapa
-  int currentQuestion = 1;
-
-  // Text controller untuk mengambil input dari user
+  // Text controller to get user's answer input
   final TextEditingController answerController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    startTimer(); // Start timer saat kuis mulai
+
+    // Set the question set based on the subject
+    if (widget.subject == 'Database') {
+      questionSet = [
+        {
+          'question':
+              'Dalam RDBMS, Atribut candidate key yang dipilih untuk mengidentifikasi secara unik setiap kemunculan entitas adalah...',
+          'correctAnswer': 'primary key',
+        },
+        {
+          'question':
+              'Dalam ERD, Hubungan antar 2 entitas disebut sebagai hubungan derajat 2 atau...',
+          'correctAnswer': 'biner',
+        },
+        {
+          'question':
+              'Dalam SQL, tipe data karakter digunakan untuk menyimpan string atau sekumpulan karakter dengan panjang tetap adalah...',
+          'correctAnswer': 'char',
+        }
+      ];
+    } else if (widget.subject == 'Algoritma') {
+      questionSet = [
+        {
+          'question':
+              'Deskripsi berbasis teks dari langkah-langkah algoritma disebut sebagai...',
+          'correctAnswer': 'pseudocode',
+        },
+        {
+          'question':
+              'Algoritma yang menggunakan pendekatan divide and conquer dikenal sebagai algoritma ...',
+          'correctAnswer': 'rekursif',
+        },
+        {
+          'question':
+              'Algoritma yang memiliki efisiensi paling baik dalam pengurutan / sorting untuk data yang hampir terurut adalah...',
+          'correctAnswer': 'insertion',
+        }
+      ];
+    }
+
+    startTimer(); // Start the timer
   }
 
   @override
   void dispose() {
-    timer?.cancel(); // Cancel timer saat widget dihancurkan
-    answerController.dispose(); // Hapus controller saat widget dihancurkan
+    timer?.cancel(); // Cancel timer when widget is disposed
+    answerController.dispose(); // Dispose controller
     super.dispose();
   }
 
-  // Start countdown timer
+  // Start the countdown timer
   void startTimer() {
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (timeLeft > 0) {
@@ -48,24 +85,25 @@ class _IsianState extends State<Isian> {
         });
       } else {
         timer.cancel();
-        _showResultPage(); // navigasi ke halaman hasil setelah waktu habis
+        _showResultPage(); // Navigate to result page when time runs out
       }
     });
   }
 
-  // fungsi untuk memeriksa jawaban user
+  // Function to handle user's answer submission
   void handleAnswer() {
-    String userAnswer = answerController.text
-        .trim()
-        .toLowerCase(); // Ambil jawaban dari text box dan trim
+    String userAnswer =
+        answerController.text.trim().toLowerCase(); // Get user's answer
 
-    if (correctAnswers[currentQuestion]?.toLowerCase() == userAnswer) {
+    // Check if the answer is correct
+    if (questionSet[currentQuestion]['correctAnswer']?.toLowerCase() ==
+        userAnswer) {
       setState(() {
-        score++; // Skor bertambah jika jawaban benar
+        score++; // Increment score if the answer is correct
       });
     }
 
-    // Update nilai berdasarkan skor
+    // Update nilai (score)
     setState(() {
       if (score == 1) {
         nilai = 33;
@@ -75,26 +113,26 @@ class _IsianState extends State<Isian> {
         nilai = 100;
       }
 
-      // Lanjut ke pertanyaan berikutnya
-      if (currentQuestion < 3) {
-        currentQuestion++; // Pergi ke pertanyaan berikutnya
-        answerController.clear(); // Kosongkan text box
+      // Move to the next question or finish quiz
+      if (currentQuestion < questionSet.length - 1) {
+        currentQuestion++; // Go to the next question
+        answerController.clear(); // Clear the text box for the next question
       } else {
-        // Kalau sudah sampai pertanyaan terakhir, navigasi ke halaman hasil
-        _showResultPage();
-        timer?.cancel();
+        _showResultPage(); // Show the result page after the last question
+        timer?.cancel(); // Stop the timer
         timeLeft = 0;
       }
     });
   }
 
-  // Navigasi ke halaman hasil
+  // Function to show the result page
   void _showResultPage() {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => ResultsPage(
-          currentScore: nilai, // Pass skor ke ResultsPage
+          currentScore: nilai, // PASS nilai akhir
+          subject: widget.subject,
         ),
       ),
     );
@@ -103,15 +141,17 @@ class _IsianState extends State<Isian> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFF0D47A1),
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(30),
-          color: Color(0xFF0D47A1), // warna background
+          color: Color(0xFF0D47A1), // Background color
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(height: 30),
+
               // Display the timer
               Container(
                 decoration: BoxDecoration(
@@ -135,26 +175,13 @@ class _IsianState extends State<Isian> {
                 'img/lightbulb.png',
                 height: 150,
               ),
-
               SizedBox(height: 20),
 
-              // Tampilkan pertanyaan berdasarkan nomor
-              if (currentQuestion == 1) ...[
-                buildQuestion(
-                  'Pertanyaan 1 dari 3',
-                  'Apakah soal benar atau salah?',
-                ),
-              ] else if (currentQuestion == 2) ...[
-                buildQuestion(
-                  'Pertanyaan 2 dari 3',
-                  'Apakah soal benar atau salah?',
-                ),
-              ] else if (currentQuestion == 3) ...[
-                buildQuestion(
-                  'Pertanyaan 3 dari 3',
-                  'Apakah soal benar atau salah?',
-                ),
-              ],
+              // Display the current question
+              buildQuestion(
+                'Pertanyaan ${currentQuestion + 1} dari ${questionSet.length}',
+                questionSet[currentQuestion]['question'],
+              ),
               SizedBox(height: 200),
             ],
           ),
@@ -163,7 +190,7 @@ class _IsianState extends State<Isian> {
     );
   }
 
-  // fungsi membangun pertanyaan dan text box untuk jawaban
+  // Function to build the question and text box for the answer
   Widget buildQuestion(String questionTitle, String questionText) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -193,7 +220,8 @@ class _IsianState extends State<Isian> {
           ),
         ),
         SizedBox(height: 20),
-        // Text box untuk jawaban
+
+        // Text box for user's answer
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: TextField(
@@ -205,17 +233,18 @@ class _IsianState extends State<Isian> {
               filled: true,
             ),
             onSubmitted: (value) {
-              handleAnswer(); // Memeriksa jawaban saat dikirim
+              handleAnswer(); // Handle answer when submitted
             },
           ),
         ),
         SizedBox(height: 20),
+
+        // Submit button for the answer
         Padding(
-          padding: const EdgeInsets.symmetric(
-              horizontal: 20.0), // Menambah padding kiri dan kanan
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: ElevatedButton(
             onPressed: () {
-              handleAnswer(); // Memeriksa jawaban saat tombol tekan
+              handleAnswer(); // Handle answer when the button is pressed
             },
             child: Text('Kirim Jawaban'),
           ),

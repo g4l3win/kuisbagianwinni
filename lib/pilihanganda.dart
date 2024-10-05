@@ -3,6 +3,9 @@ import 'dart:async';
 import 'skor.dart';
 
 class Pilihanganda extends StatefulWidget {
+  final String subject; // terima matkul
+  Pilihanganda({required this.subject});
+
   @override
   _PilihangandaState createState() => _PilihangandaState();
 }
@@ -13,25 +16,95 @@ class _PilihangandaState extends State<Pilihanganda> {
   Timer? timer;
   double nilai = 0;
 
-  // jawaban yang benar untuk setiap soal
-  final Map<int, String> correctAnswers = {
-    1: 'pilihan 4', // jawaban benar pertanyaan 1
-    2: 'China', // bener untuk kedua
-    3: 'Mars', // bener untuk ketiga
-  };
+  // set pertanyaan dan jawaban untuk materi database atau algoritma
+  List<Map<String, dynamic>> questionSet = [];
 
-  // Keep track sedang pertanyaan keberapa
-  int currentQuestion = 1;
+  int currentQuestion = 0; // ngelacak pertanyaan keberapa
 
   @override
   void initState() {
     super.initState();
-    startTimer(); // Start timer waktu kuis mulai
+    if (widget.subject == 'Database') {
+      questionSet = [
+        {
+          'question':
+              'Bahasa query yang paling umum adalah Structured Query Language atau bisa disebut sebagai',
+          'options': [
+            'S-Q-L, strukquer',
+            'select bintang, S-Q-L',
+            'see-Quel, ry-quel',
+            'S-Q-L, see-Quel',
+          ],
+          'correctAnswer': 'S-Q-L, see-Quel',
+        },
+        {
+          'question': 'Apa kelebihan menggunakan DBMS',
+          'options': [
+            'Mengurangi redudansi data dan meningkatkan konsistensi',
+            'hanya bisa sharing data lokal',
+            'tidak ada standard penyimpanan data dan sangat fleksibel',
+            'sangat aman tapi tidak bisa di-backup',
+          ],
+          'correctAnswer':
+              'Mengurangi redudansi data dan meningkatkan konsistensi',
+        },
+        {
+          'question':
+              'Struktur data relasional dalam RDBMS terdiri dari beberapa komponen berikut kecuali',
+          'options': [
+            'relasi',
+            'atribut',
+            'hadoop',
+            'tuple',
+          ],
+          'correctAnswer': 'hadoop',
+        }
+      ];
+    } else if (widget.subject == 'Algoritma') {
+      questionSet = [
+        {
+          'question':
+              'Dalam bahasa pemrograman, apa yang dimaksud dengan looping?',
+          'options': [
+            'menjalankan blok kode sekali',
+            'mendefinisikan variable',
+            'menghapus data dari memori',
+            'menjalankan blok kode secara berulang',
+          ],
+          'correctAnswer': 'menjalankan blok kode secara berulang',
+        },
+        {
+          'question':
+              'Ilmu algoritma, namanya terinspirasi dari nama seorang ilmuwan yaitu?',
+          'options': [
+            'Al-Khawarizmi',
+            'Al-Goritma',
+            'Al-Khawarits',
+            'Al-Gorism',
+          ],
+          'correctAnswer': 'Al-Khawarizmi',
+        },
+        {
+          'question':
+              'Apa yang dimaksud dengan algoritma dalam konteks komputasi?',
+          'options': [
+            'Sekumpulan simbol matematika',
+            'Kumpulan data yang disimpan dalam komputer',
+            'Kumpulan instruksi terstruktur untuk menyelesaikan masalah komputasi',
+            'Bahasa formal yang digunakan dalam pemrograman',
+          ],
+          'correctAnswer':
+              'Kumpulan instruksi terstruktur untuk menyelesaikan masalah komputasi',
+        }
+      ];
+    }
+
+    startTimer(); // Start timer
   }
 
   @override
   void dispose() {
-    timer?.cancel(); // Cancel timer
+    timer?.cancel(); // Cancel the timer when the widget is disposed
     super.dispose();
   }
 
@@ -44,21 +117,21 @@ class _PilihangandaState extends State<Pilihanganda> {
         });
       } else {
         timer.cancel();
-        _showResultPage(); // navigasi ke halaman hasil setelah waktu habis
+        _showResultPage(); // Navigate ke result page saat waktu habis
       }
     });
   }
 
-  // fungsi handle jawaban usert
+  // Handle jawaban
   void handleAnswer(String selectedAnswer) {
-    // Check if the selected answer is correct
-    if (correctAnswers[currentQuestion] == selectedAnswer) {
+    // Check cek jawabat benar atau salah
+    if (questionSet[currentQuestion]['correctAnswer'] == selectedAnswer) {
       setState(() {
-        score++; // kalau jawaban bener, skornya nambah 1
+        score++; // Increment score kalau jawaban benar
       });
     }
 
-    // Update nilai based on the score
+//Update nilai berdasarkan skor
     setState(() {
       if (score == 1) {
         nilai = 33;
@@ -67,28 +140,27 @@ class _PilihangandaState extends State<Pilihanganda> {
       } else if (score == 3) {
         nilai = 100;
       }
+    });
 
-      // lanjut ke pertanyaan berikutnya. kalau no pertanyaan masih kurang dari 3 akan nambah terus
-
-      if (currentQuestion < 3) {
+    // pindah ke pertanyaan berikutnya
+    setState(() {
+      if (currentQuestion < questionSet.length - 1) {
         currentQuestion++; // Go to the next question
       } else {
-        // kalau sudah sampai pertanyaan ke3 navigasi ke ResultsPage
-        _showResultPage();
-        // Cancel timer dan buat sisa waktu jadi 0
-        timer?.cancel();
-        timeLeft = 0;
+        _showResultPage(); // Navigasi ke halaman skor hasil
+        timer?.cancel(); // Stop timer
       }
     });
   }
 
-  // Navigasi ke ResultsPage
+  // Show result page
   void _showResultPage() {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => ResultsPage(
-          currentScore: nilai, // Pass skor ke ResultsPage
+          currentScore: nilai.toDouble(), // Pass nilai to ResultsPage
+          subject: widget.subject, // Pass subject to ResultsPage
         ),
       ),
     );
@@ -97,16 +169,18 @@ class _PilihangandaState extends State<Pilihanganda> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFF0D47A1),
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(20),
-          color: Color(0xFF0D47A1), // warna background
+          color: Color(0xFF0D47A1), // Background color
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(height: 30),
-              // Display the timer
+
+              // Timer
               Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
@@ -124,7 +198,7 @@ class _PilihangandaState extends State<Pilihanganda> {
               ),
               SizedBox(height: 40),
 
-              // Lightbulb imagess
+              // Lightbulb image
               Image.asset(
                 'img/lightbulb.png',
                 height: 150,
@@ -132,26 +206,12 @@ class _PilihangandaState extends State<Pilihanganda> {
 
               SizedBox(height: 20),
 
-              // menampilkan pertanyaan saat ini
-              if (currentQuestion == 1) ...[
-                buildQuestion(
-                  'Pertanyaan 1 dari 3',
-                  'Which one of these tanks was designed and operated by the United Kingdom?',
-                  ['pilihan 1', 'pilihan 2', 'Pilihan 3', 'pilihan 4'],
-                ),
-              ] else if (currentQuestion == 2) ...[
-                buildQuestion(
-                  'Pertanyaan 2 dari 3',
-                  'Which one of these countries has the largest population?',
-                  ['China', 'India', 'USA', 'Brazil'],
-                ),
-              ] else if (currentQuestion == 3) ...[
-                buildQuestion(
-                  'Pertanyaan 3 dari 3',
-                  'Which one of these planets is known as the Red Planet?',
-                  ['Earth', 'Jupiter', 'Mars', 'Venus'],
-                ),
-              ],
+              // Display pertanyaan
+              buildQuestion(
+                questionSet[currentQuestion]['question'],
+                questionSet[currentQuestion]['options'],
+              ),
+
               SizedBox(height: 50),
             ],
           ),
@@ -160,48 +220,35 @@ class _PilihangandaState extends State<Pilihanganda> {
     );
   }
 
-  // fungsi membangun pertanyaan dan button pilihan ganda
-  Widget buildQuestion(
-      String questionTitle, String questionText, List<String> answers) {
+  // Fungsi membuat pertanyaan dan button jawaban
+  Widget buildQuestion(String questionText, List<String> options) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                questionTitle,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
-              ),
-              SizedBox(height: 10),
-              Text(
-                questionText,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
+          child: Text(
+            questionText,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         SizedBox(height: 20),
-        // menampilkan button pilihan jawaban
-        for (var answer in answers)
+
+        // Display answer buttons
+        for (var option in options)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: buildAnswerButton(answer),
+            child: buildAnswerButton(option),
           ),
       ],
     );
   }
 
-  // fungsi membuat button jawaban
+  // Function untuk answer buttons
   Widget buildAnswerButton(String answer) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -216,7 +263,7 @@ class _PilihangandaState extends State<Pilihanganda> {
             ),
           ),
           onPressed: () {
-            handleAnswer(answer); // memeriksa jawaban
+            handleAnswer(answer); // cek jawaban saat button ditekan
           },
           child: Text(
             answer,

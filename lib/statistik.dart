@@ -21,24 +21,9 @@ class _Statistik extends State<Statistik> {
 
   // Define the data for each quiz
   final Map<String, List<int>> quizData = {
-    'Kuis 1': [
-      0,
-      3,
-      2,
-      5
-    ], // Data for Kuis 1: 0 => 0, 33 => 3, 67 => 2, 100 => 5
-    'Kuis 2': [
-      0,
-      0,
-      5,
-      5
-    ], // Data for Kuis 2: 0 => 0, 33 => 0, 67 => 5, 100 => 5
-    'Kuis 3': [
-      2,
-      1,
-      1,
-      6
-    ], // Data for Kuis 3: 0 => 2, 33 => 1, 67 => 1, 100 => 6
+    'Kuis 1': [0, 3, 2, 5], // Data  Kuis 1: 0 => 0, 33 => 3, 67 => 2, 100 => 5
+    'Kuis 2': [0, 0, 5, 5], // Data  Kuis 2: 0 => 0, 33 => 0, 67 => 5, 100 => 5
+    'Kuis 3': [2, 1, 1, 6], // Data  Kuis 3: 0 => 2, 33 => 1, 67 => 1, 100 => 6
   };
 
   @override
