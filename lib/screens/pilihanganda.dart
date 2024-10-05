@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'questions.dart';
 import 'skor.dart';
 
 class Pilihanganda extends StatefulWidget {
+  String subject;
+  Pilihanganda({required this.subject});
+
   @override
   _PilihangandaState createState() => _PilihangandaState();
 }
@@ -13,20 +17,17 @@ class _PilihangandaState extends State<Pilihanganda> {
   Timer? timer;
   double nilai = 0;
 
-  // jawaban yang benar untuk setiap soal
-  final Map<int, String> correctAnswers = {
-    1: 'B) Komponen yang digunakan untuk membangun antarmuka pengguna', // jawaban benar pertanyaan 1
-    2: 'C) Dapat digunakan untuk mengembangkan aplikasi di berbagai platform (Android, iOS, Web)', // bener untuk kedua
-    3: 'D) Instant Run', // bener untuk ketiga
-  };
+  // Set pertanyaan dan jawaban untuk materi
+  List<Map<String, dynamic>> questionSet = [];
 
-  // Keep track sedang pertanyaan keberapa
-  int currentQuestion = 1;
+  int currentQuestion = 0; // Tracking the current question
 
   @override
   void initState() {
     super.initState();
-    startTimer(); // Start timer waktu kuis mulai
+    questionSet =
+        Questions.getQuestions(widget.subject); // subject enggak kedetect
+    startTimer(); // Start timer
   }
 
   @override
@@ -44,17 +45,17 @@ class _PilihangandaState extends State<Pilihanganda> {
         });
       } else {
         timer.cancel();
-        _showResultPage(); // navigasi ke halaman hasil setelah waktu habis
+        _showResultPage(); // Navigasi ke halaman hasil setelah waktu habis
       }
     });
   }
 
-  // fungsi handle jawaban usert
+  // Handle jawaban
   void handleAnswer(String selectedAnswer) {
-    // Check if the selected answer is correct
-    if (correctAnswers[currentQuestion] == selectedAnswer) {
+    // Check jawaban benar atau salah
+    if (questionSet[currentQuestion]['correctAnswer'] == selectedAnswer) {
       setState(() {
-        score++; // kalau jawaban bener, skornya nambah 1
+        score++; // Increment score kalau jawaban benar
       });
     }
 
@@ -68,27 +69,24 @@ class _PilihangandaState extends State<Pilihanganda> {
         nilai = 100;
       }
 
-      // lanjut ke pertanyaan berikutnya. kalau no pertanyaan masih kurang dari 3 akan nambah terus
-
-      if (currentQuestion < 3) {
+      // Pindah ke pertanyaan berikutnya
+      if (currentQuestion < questionSet.length - 1) {
         currentQuestion++; // Go to the next question
       } else {
-        // kalau sudah sampai pertanyaan ke3 navigasi ke ResultsPage
-        _showResultPage();
-        // Cancel timer dan buat sisa waktu jadi 0
-        timer?.cancel();
-        timeLeft = 0;
+        _showResultPage(); // Navigasi ke halaman skor hasil
+        timer?.cancel(); // Stop timer
       }
     });
   }
 
-  // Navigasi ke ResultsPage
+  // Show result page
   void _showResultPage() {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => ResultsPage(
-          currentScore: nilai, // Pass skor ke ResultsPage
+          currentScore: nilai.toDouble(), // Pass nilai to ResultsPage
+          subject: widget.subject, // Pass subject to ResultsPage
         ),
       ),
     );
@@ -101,7 +99,7 @@ class _PilihangandaState extends State<Pilihanganda> {
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(20),
-          color: Color(0xFF3B547A), // warna background
+          color: Color(0xFF3B547A), // Warna background
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -125,7 +123,7 @@ class _PilihangandaState extends State<Pilihanganda> {
               ),
               SizedBox(height: 40),
 
-              // Lightbulb imagess
+              // Lightbulb images
               Image.asset(
                 'images/lightbulb.png',
                 height: 150,
@@ -133,41 +131,12 @@ class _PilihangandaState extends State<Pilihanganda> {
 
               SizedBox(height: 20),
 
-              // menampilkan pertanyaan saat ini
-              if (currentQuestion == 1) ...[
-                buildQuestion(
-                  'Pertanyaan 1 dari 3',
-                  'Apa yang dimaksud dengan widget di Flutter?',
-                  [
-                    'A) Komponen yang digunakan untuk menyimpan data',
-                    'B) Komponen yang digunakan untuk membangun antarmuka pengguna',
-                    'C) Alat untuk menguji aplikasi',
-                    'D) Fitur untuk membuat animasi'
-                  ],
-                ),
-              ] else if (currentQuestion == 2) ...[
-                buildQuestion(
-                  'Pertanyaan 2 dari 3',
-                  'Manakah dari berikut ini yang merupakan manfaat dari menggunakan Flutter?',
-                  [
-                    'A) Hanya untuk aplikasi Android',
-                    'B) Performa yang lambat dibandingkan framework lain',
-                    'C) Dapat digunakan untuk mengembangkan aplikasi di berbagai platform (Android, iOS, Web)',
-                    'D) Tidak mendukung pengembangan aplikasi desktop'
-                  ],
-                ),
-              ] else if (currentQuestion == 3) ...[
-                buildQuestion(
-                  'Pertanyaan 3 dari 3',
-                  'Fitur apa yang memungkinkan pengembang untuk melihat perubahan kode secara langsung di Flutter?',
-                  [
-                    'A) Hot Swap',
-                    'B) Hot Reload',
-                    'C) Live Reload',
-                    'D) Instant Run'
-                  ],
-                ),
-              ],
+              // Tampilkan pertanyaan saat ini
+              buildQuestion(
+                'Pertanyaan ${currentQuestion + 1} dari 3',
+                questionSet[currentQuestion]['question'],
+                questionSet[currentQuestion]['options'],
+              ),
               SizedBox(height: 50),
             ],
           ),
@@ -176,7 +145,7 @@ class _PilihangandaState extends State<Pilihanganda> {
     );
   }
 
-  // fungsi membangun pertanyaan dan button pilihan ganda
+  // Fungsi untuk membangun pertanyaan dan button pilihan ganda
   Widget buildQuestion(
       String questionTitle, String questionText, List<String> answers) {
     return Column(
@@ -207,7 +176,7 @@ class _PilihangandaState extends State<Pilihanganda> {
           ),
         ),
         SizedBox(height: 20),
-        // menampilkan button pilihan jawaban
+        // Menampilkan button pilihan jawaban
         for (var answer in answers)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -217,7 +186,7 @@ class _PilihangandaState extends State<Pilihanganda> {
     );
   }
 
-  // fungsi membuat button jawaban
+  // Fungsi membuat button jawaban
   Widget buildAnswerButton(String answer) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -232,7 +201,7 @@ class _PilihangandaState extends State<Pilihanganda> {
             ),
           ),
           onPressed: () {
-            handleAnswer(answer); // memeriksa jawaban
+            handleAnswer(answer); // Memeriksa jawaban
           },
           child: Text(
             answer,

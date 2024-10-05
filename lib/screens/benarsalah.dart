@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'questions.dart'; // Import the questions class
 import 'dart:async';
 import 'skor.dart';
 
 class Benarsalah extends StatefulWidget {
+  final String subject; // Terima subjek dari halaman sebelumnya
+  Benarsalah({required this.subject});
+
   @override
   _Benarsalah createState() => _Benarsalah();
 }
@@ -13,29 +17,25 @@ class _Benarsalah extends State<Benarsalah> {
   Timer? timer;
   double nilai = 0;
 
-  // jawaban yang benar untuk setiap soal
-  final Map<int, String> correctAnswers = {
-    1: 'benar', // jawaban benar pertanyaan 1
-    2: 'benar', // bener untuk kedua
-    3: 'salah', // bener untuk ketiga
-  };
-
-  // Keep track sedang pertanyaan keberapa
-  int currentQuestion = 1;
+  List<Map<String, dynamic>> questionSet = [];
+  int currentQuestion = 0; // Tracking the current question
 
   @override
   void initState() {
     super.initState();
-    startTimer(); // Start timer waktu kuis mulai
+    // Mengambil soal berdasarkan subjek yang dipilih
+    questionSet = BenarSalahQuestions.getBenarSalahQuestions(widget.subject);
+
+    startTimer(); // Start timer ketika kuis dimulai
   }
 
   @override
   void dispose() {
-    timer?.cancel(); // Cancel timer
+    timer?.cancel(); // Cancel timer ketika widget dihancurkan
     super.dispose();
   }
 
-  // Start countdown timer
+  // Fungsi untuk memulai countdown timer
   void startTimer() {
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (timeLeft > 0) {
@@ -44,21 +44,20 @@ class _Benarsalah extends State<Benarsalah> {
         });
       } else {
         timer.cancel();
-        _showResultPage(); // navigasi ke halaman hasil setelah waktu habis
+        _showResultPage(); // Navigasi ke halaman hasil setelah waktu habis
       }
     });
   }
 
-  // fungsi handle jawaban usert
+  // Fungsi untuk memeriksa jawaban
   void handleAnswer(String selectedAnswer) {
-    // Check if the selected answer is correct
-    if (correctAnswers[currentQuestion] == selectedAnswer) {
+    if (questionSet[currentQuestion]['correctAnswer'] == selectedAnswer) {
       setState(() {
-        score++; // kalau jawaban bener, skornya nambah 1
+        score++; // Tambah skor jika jawaban benar
       });
     }
 
-    // Update nilai based on the score
+    // Update nilai berdasarkan skor
     setState(() {
       if (score == 1) {
         nilai = 33;
@@ -68,27 +67,24 @@ class _Benarsalah extends State<Benarsalah> {
         nilai = 100;
       }
 
-      // lanjut ke pertanyaan berikutnya. kalau no pertanyaan masih kurang dari 3 akan nambah terus
-
-      if (currentQuestion < 3) {
-        currentQuestion++; // Go to the next question
+      // Jika masih ada pertanyaan lanjutkan ke pertanyaan berikutnya
+      if (currentQuestion < questionSet.length - 1) {
+        currentQuestion++;
       } else {
-        // kalau sudah sampai pertanyaan ke3 navigasi ke ResultsPage
-        _showResultPage();
-        // Cancel timer dan buat sisa waktu jadi 0
-        timer?.cancel();
-        timeLeft = 0;
+        _showResultPage(); // Jika sudah selesai, navigasi ke halaman hasil
+        timer?.cancel(); // Stop timer
       }
     });
   }
 
-  // Navigasi ke ResultsPage
+  // Navigasi ke halaman hasil
   void _showResultPage() {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => ResultsPage(
-          currentScore: nilai, // Pass skor ke ResultsPage
+          subject: widget.subject,
+          currentScore: nilai.toDouble(), // Pass nilai ke halaman hasil
         ),
       ),
     );
@@ -101,13 +97,13 @@ class _Benarsalah extends State<Benarsalah> {
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(30),
-          color: Color(0xFF3B547A), // warna background
+          color: Color(0xFF3B547A), // Warna background
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(height: 30),
-              // Display the timer
+              // Tampilkan timer
               Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
@@ -125,7 +121,7 @@ class _Benarsalah extends State<Benarsalah> {
               ),
               SizedBox(height: 50),
 
-              // Lightbulb imagess
+              // Menampilkan gambar lightbulb
               Image.asset(
                 'images/lightbulb.png',
                 height: 150,
@@ -133,26 +129,12 @@ class _Benarsalah extends State<Benarsalah> {
 
               SizedBox(height: 20),
 
-              // menampilkan pertanyaan saat ini
-              if (currentQuestion == 1) ...[
-                buildQuestion(
-                  'Pertanyaan 1 dari 3',
-                  'Hot Reload di Flutter memungkinkan pengembang untuk melihat perubahan kode secara langsung tanpa harus menghentikan dan memulai kembali aplikasi.',
-                  ['benar', 'salah'],
-                ),
-              ] else if (currentQuestion == 2) ...[
-                buildQuestion(
-                  'Pertanyaan 2 dari 3',
-                  'Di Flutter, widget adalah elemen dasar yang digunakan untuk membangun antarmuka pengguna.',
-                  ['benar', 'salah'],
-                ),
-              ] else if (currentQuestion == 3) ...[
-                buildQuestion(
-                  'Pertanyaan 3 dari 3',
-                  'Flutter adalah framework yang hanya dapat digunakan untuk mengembangkan aplikasi Android.',
-                  ['benar', 'salah'],
-                ),
-              ],
+              // Tampilkan pertanyaan saat ini
+              buildQuestion(
+                'Pertanyaan ${currentQuestion + 1} dari ${questionSet.length}',
+                questionSet[currentQuestion]['question'],
+                questionSet[currentQuestion]['options'],
+              ),
               SizedBox(height: 200),
             ],
           ),
@@ -161,7 +143,7 @@ class _Benarsalah extends State<Benarsalah> {
     );
   }
 
-  // fungsi membangun pertanyaan dan button pilihan ganda
+  // Fungsi untuk membangun pertanyaan dan button pilihan ganda
   Widget buildQuestion(
       String questionTitle, String questionText, List<String> answers) {
     return Column(
@@ -192,7 +174,7 @@ class _Benarsalah extends State<Benarsalah> {
           ),
         ),
         SizedBox(height: 20),
-        // menampilkan button pilihan jawaban
+        // Menampilkan button pilihan jawaban
         for (var answer in answers)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -202,7 +184,7 @@ class _Benarsalah extends State<Benarsalah> {
     );
   }
 
-  // fungsi membuat button jawaban
+  // Fungsi untuk membuat button jawaban
   Widget buildAnswerButton(String answer) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -217,7 +199,7 @@ class _Benarsalah extends State<Benarsalah> {
             ),
           ),
           onPressed: () {
-            handleAnswer(answer); // memeriksa jawaban
+            handleAnswer(answer); // Periksa jawaban ketika ditekan
           },
           child: Text(
             answer,

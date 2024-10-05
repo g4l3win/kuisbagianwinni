@@ -3,9 +3,10 @@ import 'home_screen.dart'; // Import your home_screen.dart
 
 class ResultsPage extends StatelessWidget {
   final double currentScore;
-
+  final String subject;
   ResultsPage({
     required this.currentScore,
+    required this.subject,
   });
 
   @override

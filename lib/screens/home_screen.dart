@@ -222,29 +222,33 @@ class _HomePageState extends State<HomePage> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          QuizHomePage(), // Ganti dengan halaman kuis Flutter
+                                      builder: (context) => QuizHomePage(
+                                          subject:
+                                              'Flutter'), // Ganti dengan halaman kuis Flutter
                                     ),
                                   );
                                 } else if (imgList[index] == "C++") {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => AlQuizHomePage(),
+                                      builder: (context) =>
+                                          QuizHomePage(subject: 'C++'),
                                     ),
                                   );
                                 } else if (imgList[index] == "HTML") {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => WPQuizHomePage(),
+                                      builder: (context) =>
+                                          QuizHomePage(subject: 'HTML'),
                                     ),
                                   );
                                 } else if (imgList[index] == "SQL") {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => DSQuizHomePage(),
+                                      builder: (context) =>
+                                          QuizHomePage(subject: 'SQL'),
                                     ),
                                   );
                                 }
