@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'trueFalse_screen.dart';
-import 'multiplechoice_screen.dart'; // Pastikan import file yang benar
+import 'multiplechoice_screen.dart';
 import 'essay_screen.dart';
 
 class QuizScreen extends StatefulWidget {
@@ -97,12 +97,24 @@ class _QuizScreenState extends State<QuizScreen> {
                   leading: Icon(Icons.check_box, color: Color(0xFFFFD801)),
                   onTap: () {
                     // Navigasi ke halaman MultipleChoiceQuizScreen
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MultipleChoiceQuizScreen(),
-                      ),
-                    );
+                    if (selectedCategory != null) {
+                      // Navigasi ke halaman MultipleChoiceQuizScreen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MultipleChoiceQuizScreen(),
+                        ),
+                      );
+                    } else {
+                      // Tampilkan pesan jika belum memilih kategori
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content:
+                              Text("Silakan pilih kategori terlebih dahulu"),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
                   },
                 ),
               ),
@@ -115,7 +127,7 @@ class _QuizScreenState extends State<QuizScreen> {
                 ),
                 child: ListTile(
                   title: Text(
-                    "Essay",
+                    "Esai",
                     style: TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.w500,
@@ -125,11 +137,23 @@ class _QuizScreenState extends State<QuizScreen> {
                   leading: Icon(Icons.check_box, color: Color(0xFFFFD801)),
                   onTap: () {
                     // Navigasi ke halaman EssayQuizScreen
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => EssayQuizScreen()),
-                    );
+                    if (selectedCategory != null) {
+                      // Navigasi ke halaman EssayQuizScreen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EssayQuizScreen()),
+                      );
+                    } else {
+                      // Tampilkan pesan jika belum memilih kategori
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content:
+                              Text("Silakan pilih kategori terlebih dahulu"),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
                   },
                 ),
               ),
@@ -151,11 +175,22 @@ class _QuizScreenState extends State<QuizScreen> {
                   ),
                   leading: Icon(Icons.check_circle, color: Color(0xFFFFD801)),
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => TrueFalseQuizScreen()),
-                    );
+                    if (selectedCategory != null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TrueFalseQuizScreen()),
+                      );
+                    } else {
+                      // Tampilkan pesan jika belum memilih kategori
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content:
+                              Text("Silakan pilih kategori terlebih dahulu"),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
                   },
                 ),
               ),
