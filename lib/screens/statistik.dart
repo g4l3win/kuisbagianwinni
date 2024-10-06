@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'quiz_data.dart';
 
 class Statistik extends StatefulWidget {
   final String subject;
@@ -10,36 +11,24 @@ class Statistik extends StatefulWidget {
 }
 
 class _Statistik extends State<Statistik> {
-  // Initial data for 'Kuis 1'
-  List<int> currentDistribusi = [
-    0,
-    3,
-    2,
-    5
-  ]; // Initial distribution counts for Kuis 1
+  // Initial data untuk 'Kuis 1'
+  List<int> currentDistribusi = [0, 3, 2, 5]; // distribusi awal untuk Kuis 1
   List<String> quizNames = ['Kuis 1', 'Kuis 2', 'Kuis 3'];
 
-  // Define the data for each quiz
-  final Map<String, List<int>> quizData = {
-    'Kuis 1': [
-      0,
-      3,
-      2,
-      5
-    ], // Data for Kuis 1: 0 => 0, 33 => 3, 67 => 2, 100 => 5
-    'Kuis 2': [
-      0,
-      0,
-      5,
-      5
-    ], // Data for Kuis 2: 0 => 0, 33 => 0, 67 => 5, 100 => 5
-    'Kuis 3': [
-      2,
-      1,
-      1,
-      6
-    ], // Data for Kuis 3: 0 => 2, 33 => 1, 67 => 1, 100 => 6
-  };
+// List tipe quiz
+  List<String> quizTypes = ['Pilihan Ganda', 'Isian', 'Benar Salah'];
+  String selectedQuizType = 'Pilihan Ganda'; // tipe kuis default
+
+// Fungsi untuk mendapatkan data berdasarkan tipe quiz
+  Map<String, List<int>> _getQuizData() {
+    if (selectedQuizType == 'Pilihan Ganda') {
+      return QuizData.pilihanGandaData;
+    } else if (selectedQuizType == 'Isian') {
+      return QuizData.isianData;
+    } else {
+      return QuizData.benarSalahData;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,13 +43,50 @@ class _Statistik extends State<Statistik> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            SizedBox(height: 10),
+            // Row for selecting quiz type
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: quizTypes.map((type) {
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedQuizType = type;
+                        currentDistribusi = _getQuizData()['Kuis 1']!;
+                      });
+                    },
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                      decoration: BoxDecoration(
+                        color: selectedQuizType == type
+                            ? Color(0xFFFFD801)
+                            : Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        type,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: selectedQuizType == type
+                              ? Colors.black
+                              : Colors.grey,
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
             SizedBox(
-              width: 400, // Set the width
-              height: 400, // Set the height
+              width: 400, // Set width
+              height: 400, // Set height
               child: BarChart(
                 BarChartData(
                   //alignment: BarChartAlignment.spaceEvenly,
-                  maxY: 6, // Maximum value for Y-axis
+                  maxY: 7, // Maximum value for Y-axis
                   barGroups: _generateBarGroups(currentDistribusi),
                   borderData: FlBorderData(
                     show: false,
@@ -105,7 +131,7 @@ class _Statistik extends State<Statistik> {
                   onTap: () {
                     // Update the bar chart data when a quiz is selected
                     setState(() {
-                      currentDistribusi = quizData[quizNames[index]]!;
+                      currentDistribusi = _getQuizData()[quizNames[index]]!;
                     });
                   },
                   child: _buildProductItem(quizNames[index]),
@@ -118,7 +144,7 @@ class _Statistik extends State<Statistik> {
     );
   }
 
-  // Generate BarChartGroupData for the current distribution
+  // Generate BarChartGroupData untuk distribution data saat ini
   List<BarChartGroupData> _generateBarGroups(List<int> distribusi) {
     return List.generate(
       distribusi.length,
@@ -135,7 +161,7 @@ class _Statistik extends State<Statistik> {
     );
   }
 
-  // Function to build each quiz item
+  // Function untuk bangun item list kuis
   Widget _buildProductItem(String name) {
     return Padding(
       padding: const EdgeInsets.all(8),
@@ -157,7 +183,7 @@ class _Statistik extends State<Statistik> {
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
-                  ), // White text on blue background
+                  ), // White text, blue background
                 ),
               ],
             ),
